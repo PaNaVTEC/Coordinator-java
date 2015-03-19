@@ -5,9 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE })
 @Retention(RetentionPolicy.SOURCE)
-public @interface Actions {
-  int[] value();
+public @interface Coordinator {
   int coordinatorId() default 1;
 }

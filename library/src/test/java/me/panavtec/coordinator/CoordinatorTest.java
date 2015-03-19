@@ -1,7 +1,8 @@
 package me.panavtec.coordinator;
 
-import me.panavtec.coordinator.listeners.CompleteAction;
-import me.panavtec.coordinator.listeners.CoordinatorComplete;
+import me.panavtec.coordinator.qualifiers.Actions;
+import me.panavtec.coordinator.qualifiers.CoordinatedAction;
+import me.panavtec.coordinator.qualifiers.CoordinatorComplete;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,14 +13,20 @@ public class CoordinatorTest {
 
   private static final int AN_ACTION = 1;
   private static final int ANOTHER_ACTION = 2;
-  
-  private Coordinator coordinator;
-  @Mock private CoordinatorComplete coordinatorComplete;
-  @Mock private CompleteAction completeAction;
+
+  @Actions(value = {
+      AN_ACTION,
+      ANOTHER_ACTION
+  })
+  Coordinator coordinator;
+
+  @Mock @CoordinatorComplete Runnable coordinatorComplete;
+  @Mock @CoordinatedAction(action = AN_ACTION) Runnable completeAction;
 
   @Before public void setUp() {
     MockitoAnnotations.initMocks(this);
-    this.coordinator = new Coordinator(coordinatorComplete, AN_ACTION, ANOTHER_ACTION);
+    Coordinator.inject(this);
+    //this.coordinator = new Coordinator(1, coordinatorComplete, AN_ACTION, ANOTHER_ACTION);
   }
 
   @Test public void completeCalled() {
@@ -35,13 +42,13 @@ public class CoordinatorTest {
   @Test public void doWhenTest() {
     coordinator.doWhen(AN_ACTION, completeAction);
     coordinator.completeAction(AN_ACTION);
-    Mockito.verify(completeAction).onActionComplete();
+    Mockito.verify(completeAction).run();
   }
 
   private void verifyComplete() {
     coordinator.completeAction(AN_ACTION);
     coordinator.completeAction(ANOTHER_ACTION);
-    Mockito.verify(coordinatorComplete).onCoordinatorComplete();
+    Mockito.verify(coordinatorComplete).run();
   }
 
 }
