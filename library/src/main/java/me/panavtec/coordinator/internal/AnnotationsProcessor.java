@@ -11,11 +11,12 @@ import javax.lang.model.element.TypeElement;
 @SupportedSourceVersion(SourceVersion.RELEASE_7) @SupportedAnnotationTypes({
     "me.panavtec.coordinator.qualifiers.Action", "me.panavtec.coordinator.qualifiers.Actions",
 })
-public class CoordinatorAnnotationProcessor extends AbstractProcessor {
+public class AnnotationsProcessor extends AbstractProcessor {
 
   @Override public boolean process(Set<? extends TypeElement> annotations,
       RoundEnvironment roundEnv) {
-
+    
+    
     return false;
   }
 }

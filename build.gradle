@@ -20,7 +20,8 @@ allprojects {
     androidVersionName = '1.0'
 
     // Libraries
-    libMockito = 'org.mockito:mockito-all:2.0.2-beta'
+    libMockito  = 'org.mockito:mockito-all:2.0.2-beta'
+    libJavaPoet = 'com.squareup:javapoet:1.0.0'
   }
   
   repositories {
