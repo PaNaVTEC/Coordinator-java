@@ -1,6 +1,6 @@
 package me.panavtec.coordinator.internal.model;
 
-public class MappedCompleteAction extends MappedAction {
+public class MappedCoordinatedAction extends MappedAction {
 
   private int actionId;
 

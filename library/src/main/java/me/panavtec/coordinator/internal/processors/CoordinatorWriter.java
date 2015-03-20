@@ -11,7 +11,7 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import me.panavtec.coordinator.Coordinator;
 import me.panavtec.coordinator.internal.model.EnclosingCoordinator;
-import me.panavtec.coordinator.internal.model.MappedCompleteAction;
+import me.panavtec.coordinator.internal.model.MappedCoordinatedAction;
 import me.panavtec.coordinator.internal.model.MappedCompleteCoordinator;
 import me.panavtec.coordinator.internal.model.MappedCoordinator;
 
@@ -64,7 +64,7 @@ public class CoordinatorWriter {
   }
 
   private void addCompleteActions(MethodSpec.Builder methodBuilder, MappedCoordinator coordinator) {
-    for (MappedCompleteAction action : coordinator.getCompletedActions()) {
+    for (MappedCoordinatedAction action : coordinator.getTriggerActions()) {
       if (action.isMethod()) {
         methodBuilder.addCode(""
             + "target."+coordinator.getCoordinatorField()+".doWhen("+action.getActionId()+", \n"

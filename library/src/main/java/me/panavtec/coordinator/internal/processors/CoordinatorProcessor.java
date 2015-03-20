@@ -1,26 +1,23 @@
-package me.panavtec.coordinator.internal;
+package me.panavtec.coordinator.internal.processors;
 
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.processing.RoundEnvironment;
 import me.panavtec.coordinator.internal.model.EnclosingCoordinator;
-import me.panavtec.coordinator.internal.model.MappedCompleteAction;
 import me.panavtec.coordinator.internal.model.MappedCompleteCoordinator;
+import me.panavtec.coordinator.internal.model.MappedCoordinatedAction;
 import me.panavtec.coordinator.internal.model.MappedCoordinator;
-import me.panavtec.coordinator.internal.processors.ActionCompleteProcessor;
-import me.panavtec.coordinator.internal.processors.CoordinatorCompleteProcessor;
-import me.panavtec.coordinator.internal.processors.EnclosingCoordinatorProcessor;
 
 public class CoordinatorProcessor {
 
-  private CoordinatorCompleteProcessor completeProcessor = new CoordinatorCompleteProcessor();
+  private CompleteCoordinatorProcessor completeProcessor = new CompleteCoordinatorProcessor();
   private EnclosingCoordinatorProcessor coordinatorProcessor = new EnclosingCoordinatorProcessor();
   private ActionCompleteProcessor actionCompleteProcessor = new ActionCompleteProcessor();
 
   public Collection<EnclosingCoordinator> processAnnotations(RoundEnvironment roundEnv) {
     Collection<EnclosingCoordinator> enclosings = processCoordinators(roundEnv);
     List<MappedCompleteCoordinator> complete = processComplete(roundEnv);
-    List<MappedCompleteAction> actions = processCoordinatedActions(roundEnv);
+    List<MappedCoordinatedAction> actions = processCoordinatedActions(roundEnv);
 
     for (EnclosingCoordinator enclosing : enclosings) {
       assignCompleteForEnclosing(enclosing, complete);
@@ -44,13 +41,13 @@ public class CoordinatorProcessor {
   }
 
   private void assingActionForEnclosing(EnclosingCoordinator enclosing,
-      List<MappedCompleteAction> actions) {
-    for (MappedCompleteAction action : actions) {
+      List<MappedCoordinatedAction> actions) {
+    for (MappedCoordinatedAction action : actions) {
       if (action.getParentName().equals(enclosing.getCompleteName())) {
         List<MappedCoordinator> coordinators = enclosing.getCoordinators();
         for (MappedCoordinator coordinator : coordinators) {
           if (coordinator.getCoordinatorId() == action.getCoordinatorId()) {
-            coordinator.getCompletedActions().add(action);
+            coordinator.getTriggerActions().add(action);
             break;
           }
         }
@@ -81,7 +78,7 @@ public class CoordinatorProcessor {
     return completeProcessor.processActions(roundEnv);
   }
 
-  private List<MappedCompleteAction> processCoordinatedActions(RoundEnvironment roundEnv) {
+  private List<MappedCoordinatedAction> processCoordinatedActions(RoundEnvironment roundEnv) {
     return actionCompleteProcessor.processActions(roundEnv);
   }
 }
