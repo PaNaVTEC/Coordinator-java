@@ -1,1 +1,3 @@
-include ':app', ':library'
+include ':library', ':sample'
+include 'coordinator-compiler'
+
