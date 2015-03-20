@@ -1,23 +1,46 @@
 package me.panavtec.coordinator;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import me.panavtec.coordinator.listeners.CompleteAction;
-import me.panavtec.coordinator.listeners.CoordinatorComplete;
 
 public class Coordinator {
 
+  private final int coordinatorId;
   private final Set<Integer> actions = new HashSet<>();
   private final Set<Integer> completedActions = new HashSet<>();
-  private final HashMap<Integer, CompleteAction> actionsCallbacks = new HashMap<>();
-  private final CoordinatorComplete coordinatorComplete;
+  private final HashMap<Integer, Runnable> actionsCallbacks = new HashMap<>();
+  private final Runnable coordinatorComplete;
 
-  public Coordinator(CoordinatorComplete coordinatorComplete, Integer... actions) {
+  public static <T> Coordinator inject(T source) {
+    try {
+      Class<?> injector = Class.forName(source.getClass().getName() + "$$CoordinatorInjector");
+      Method inject = injector.getMethod("coordinateInject", source.getClass());
+      return (Coordinator) inject.invoke(null, source);
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public Coordinator(int coordinatorId, Runnable coordinatorComplete, Integer... actions) {
+    this.coordinatorId = coordinatorId;
     this.coordinatorComplete = coordinatorComplete;
     Collections.addAll(this.actions, actions);
     checkArguments();
+  }
+
+  public Coordinator(Runnable coordinatorComplete, Integer... actions) {
+    this(Integer.MAX_VALUE, coordinatorComplete, actions);
   }
 
   public void completeAction(Integer action) {
@@ -28,19 +51,22 @@ public class Coordinator {
     }
   }
 
-  private void invokeActionCallback(Integer action) {
-    if (!completedActions.contains(action) && actionsCallbacks.containsKey(action)) {
-      actionsCallbacks.get(action).onActionComplete();
-    }
-  }
-
-  public void doWhen(Integer action, CompleteAction completeAction) {
+  public void doWhen(Integer action, Runnable completeAction) {
     actionsCallbacks.put(action, completeAction);
   }
 
   public void reset() {
     completedActions.clear();
-    actionsCallbacks.clear();
+  }
+
+  public int getCoordinatorId() {
+    return coordinatorId;
+  }
+
+  private void invokeActionCallback(Integer action) {
+    if (!completedActions.contains(action) && actionsCallbacks.containsKey(action)) {
+      actionsCallbacks.get(action).run();
+    }
   }
 
   private void checkArguments() {
@@ -54,7 +80,8 @@ public class Coordinator {
 
   private void checkAllActionsComplete() {
     if (actions.size() == completedActions.size()) {
-      coordinatorComplete.onCoordinatorComplete();
+      coordinatorComplete.run();
     }
   }
+
 }

@@ -10,15 +10,6 @@ buildscript {
 allprojects {
 
   ext {
-    // Android config
-    androidBuildToolsVersion = '21.1.2'
-    androidMinSdkVersion = 9
-    androidTargetSdkVersion = 21
-    androidCompileSdkVersion = 21
-    androidApplicationId = 'me.panavtec.coordinator'
-    androidVersionCode = 1
-    androidVersionName = '1.0'
-
     // Libraries
     libMockito  = 'org.mockito:mockito-all:2.0.2-beta'
     libJavaPoet = 'com.squareup:javapoet:1.0.0'
