@@ -11,6 +11,7 @@ Add this dependency to your build.gradle file:
 ```java
 dependencies {
     compile 'me.panavtec:coordinator:{Lib version, see the mvn central badge}'
+    provided 'me.panavtec:coordinator-compiler:{Lib version, see the mvn central badge}'
 }
 ```
 
