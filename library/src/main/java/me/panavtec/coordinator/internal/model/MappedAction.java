@@ -37,12 +37,4 @@ public abstract class MappedAction {
   public void setMethod(boolean isMethod) {
     this.isMethod = isMethod;
   }
-
-  @Override public String toString() {
-    return "MappedAction{" +
-        "coordinatorId=" + coordinatorId +
-        ", fieldName='" + fieldName + '\'' +
-        ", parentName='" + parentName + '\'' +
-        '}';
-  }
 }
