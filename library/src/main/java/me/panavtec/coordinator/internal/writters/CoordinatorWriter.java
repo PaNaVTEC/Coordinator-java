@@ -18,6 +18,7 @@ import me.panavtec.coordinator.internal.model.MappedCoordinator;
 public class CoordinatorWriter {
 
   private static final String INNER_CLASS_SUFFIX = "$$CoordinatorInjector";
+  private static final String TARGET = "target";
 
   public void writeCoordinators(Collection<EnclosingCoordinator> coordinators, Filer filer) {
     for (EnclosingCoordinator parent : coordinators) {
@@ -59,7 +60,7 @@ public class CoordinatorWriter {
     methodBuilder
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
         .returns(void.class)
-        .addParameter(ClassName.get(parent.getPackageName(), parent.getClassName()), "target");
+        .addParameter(ClassName.get(parent.getPackageName(), parent.getClassName()), TARGET);
     return methodBuilder;
   }
 
@@ -67,14 +68,14 @@ public class CoordinatorWriter {
     for (MappedCoordinatedAction action : coordinator.getTriggerActions()) {
       if (action.isMethod()) {
         methodBuilder.addCode(""
-            + "target."+coordinator.getCoordinatorField()+".doWhen("+action.getActionId()+", \n"
+            + TARGET + "."+coordinator.getCoordinatorField()+".doWhen("+action.getActionId()+", \n"
             + "new Runnable() {\n"
             + "\t@Override public void run() {\n"
-            + "\t\ttarget."+action.getFieldName()+ "();\n"
+            + "\t\t" + TARGET + "."+action.getFieldName()+ "();\n"
             + "\t}\n"
             + "});\n");
       } else {
-        methodBuilder.addStatement("target.$L.doWhen($L, target.$L)",
+        methodBuilder.addStatement(TARGET + ".$L.doWhen($L, target.$L)",
             coordinator.getCoordinatorField(),
             action.getActionId(),
             action.getFieldName()
@@ -88,14 +89,14 @@ public class CoordinatorWriter {
     MappedCompleteCoordinator completeCoordinator = coordinator.getCompleteCoordinator();
     if (completeCoordinator.isMethod()) {
       methodBuilder.addCode(""
-          + "target."+coordinator.getCoordinatorField()+ " = new Coordinator("+coordinator.getCoordinatorId()+", " +"\n"
+          + TARGET + "."+coordinator.getCoordinatorField()+ " = new Coordinator("+coordinator.getCoordinatorId()+", " +"\n"
           + "\tnew Runnable() {\n"
           + "\t\t@Override public void run() {\n"
-          + "\t\t\ttarget."+completeCoordinator.getFieldName()+ "();\n"
+          + "\t\t\t" + TARGET + "."+completeCoordinator.getFieldName()+ "();\n"
           + "\t\t}\n"
           + "\t}, " + createArrayRepresentation(coordinator.getActions()) + ");\n");
     } else {
-      methodBuilder.addStatement("target.$L = new $T($L, target.$L, $L)",
+      methodBuilder.addStatement(TARGET + ".$L = new $T($L, " + TARGET + ".$L, $L)",
           coordinator.getCoordinatorField(),
           Coordinator.class,
           coordinator.getCoordinatorId(),

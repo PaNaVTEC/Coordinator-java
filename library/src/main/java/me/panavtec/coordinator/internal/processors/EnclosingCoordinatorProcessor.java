@@ -46,8 +46,6 @@ public class EnclosingCoordinatorProcessor {
     parent.setPackageName(elementTools.getElementPackagename(e));
     parent.setClassName(elementTools.getElementParentClassName(e));
 
-    System.out.println("className : " + parent.getCompleteName() + ", package: " + parent.getPackageName());
-
     return parent;
   }
 
@@ -56,24 +54,12 @@ public class EnclosingCoordinatorProcessor {
   }
 
   private MappedCoordinator processActionsOfCoordinator(Element e) {
-    String fieldName = e.getSimpleName().toString();
     Actions mappedAnnotation = annotationForElement(e);
-
-    int coordinatorId = mappedAnnotation.coordinatorId();
-    Element parent = e.getEnclosingElement();
-
-    System.out.println("Mapped FieldName: "
-        + fieldName
-        + ", "
-        + coordinatorId
-        + ", parent: "
-        + parent.toString());
-
     MappedCoordinator mappedCoordinator = new MappedCoordinator();
     mappedCoordinator.setActions(mappedAnnotation.value());
     mappedCoordinator.setCoordinatorId(mappedAnnotation.coordinatorId());
-    mappedCoordinator.setCoordinatorField(fieldName);
-    System.out.println(mappedCoordinator.toString());
+    mappedCoordinator.setCoordinatorField(elementTools.getFieldName(e));
+
     return mappedCoordinator;
   }
 

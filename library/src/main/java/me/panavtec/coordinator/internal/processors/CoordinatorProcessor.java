@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.processing.RoundEnvironment;
 import me.panavtec.coordinator.internal.model.EnclosingCoordinator;
+import me.panavtec.coordinator.internal.model.MappedAction;
 import me.panavtec.coordinator.internal.model.MappedCompleteCoordinator;
 import me.panavtec.coordinator.internal.model.MappedCoordinatedAction;
 import me.panavtec.coordinator.internal.model.MappedCoordinator;
@@ -20,8 +21,10 @@ public class CoordinatorProcessor {
     List<MappedCoordinatedAction> actions = processCoordinatedActions(roundEnv);
 
     for (EnclosingCoordinator enclosing : enclosings) {
-      assignCompleteForEnclosing(enclosing, complete);
-      assingActionForEnclosing(enclosing, actions);
+      for (MappedCoordinator coordinator : enclosing.getCoordinators()) {
+        assignAction(actions, enclosing, coordinator);
+        assignCompleteAction(complete, enclosing, coordinator);
+      }
       checkForCompleteErrors(enclosing);
     }
 
@@ -40,34 +43,32 @@ public class CoordinatorProcessor {
     }
   }
 
-  private void assingActionForEnclosing(EnclosingCoordinator enclosing,
-      List<MappedCoordinatedAction> actions) {
-    for (MappedCoordinatedAction action : actions) {
-      if (action.getParentName().equals(enclosing.getCompleteName())) {
-        List<MappedCoordinator> coordinators = enclosing.getCoordinators();
-        for (MappedCoordinator coordinator : coordinators) {
-          if (coordinator.getCoordinatorId() == action.getCoordinatorId()) {
-            coordinator.getTriggerActions().add(action);
-            break;
-          }
-        }
-      }
+  private void assignCompleteAction(List<MappedCompleteCoordinator> complete,
+      EnclosingCoordinator enclosing, MappedCoordinator coordinator) {
+    MappedCompleteCoordinator completeAction = findAction(enclosing, coordinator, complete);
+    if (completeAction != null) {
+      coordinator.setCompleteCoordinator(completeAction);
     }
   }
 
-  private void assignCompleteForEnclosing(EnclosingCoordinator enclosing,
-      List<MappedCompleteCoordinator> completes) {
-    for (MappedCompleteCoordinator complete : completes) {
-      if (complete.getParentName().equals(enclosing.getCompleteName())) {
-        List<MappedCoordinator> coordinators = enclosing.getCoordinators();
-        for (MappedCoordinator coordinator : coordinators) {
-          if (coordinator.getCoordinatorId() == complete.getCoordinatorId()) {
-            coordinator.setCompleteCoordinator(complete);
-            break;
-          }
+  private void assignAction(List<MappedCoordinatedAction> actions, EnclosingCoordinator enclosing,
+      MappedCoordinator coordinator) {
+    MappedCoordinatedAction action = findAction(enclosing, coordinator, actions);
+    if (action != null) {
+      coordinator.getTriggerActions().add(action);
+    }
+  }
+
+  private <T extends MappedAction> T findAction(EnclosingCoordinator enclosing,
+      MappedCoordinator coordinator, List<T> actions) {
+    for (T action : actions) {
+      if (action.getParentName().equals(enclosing.getCompleteName())) {
+        if (coordinator.getCoordinatorId() == action.getCoordinatorId()) {
+          return action;
         }
       }
     }
+    return null;
   }
 
   private Collection<EnclosingCoordinator> processCoordinators(RoundEnvironment roundEnv) {
