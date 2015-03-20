@@ -1,4 +1,4 @@
-package me.panavtec.coordinator.internal.processors;
+package me.panavtec.coordinator.internal.writters;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;

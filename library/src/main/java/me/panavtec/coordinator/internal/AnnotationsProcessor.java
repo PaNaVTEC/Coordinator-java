@@ -10,7 +10,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import me.panavtec.coordinator.internal.model.EnclosingCoordinator;
 import me.panavtec.coordinator.internal.processors.CoordinatorProcessor;
-import me.panavtec.coordinator.internal.processors.CoordinatorWriter;
+import me.panavtec.coordinator.internal.writters.CoordinatorWriter;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes({
