@@ -24,8 +24,10 @@ public class CoordinatorInjectTest {
     Coordinator.inject(this);
   }
 
-  @Test public void completeCalled() {
-    verifyComplete();
+  @Test public void coordinatorComplete() {
+    coordinator.completeAction(AN_ACTION);
+    coordinator.completeAction(ANOTHER_ACTION);
+    Mockito.verify(coordinatorComplete).run();
     Mockito.verifyNoMoreInteractions(coordinatorComplete);
   }
 
@@ -34,15 +36,9 @@ public class CoordinatorInjectTest {
     Mockito.verifyNoMoreInteractions(coordinatorComplete);
   }
 
-  @Test public void doWhenTest() {
+  @Test public void actionComplete() {
     coordinator.completeAction(AN_ACTION);
     Mockito.verify(completeAction).run();
-  }
-
-  private void verifyComplete() {
-    coordinator.completeAction(AN_ACTION);
-    coordinator.completeAction(ANOTHER_ACTION);
-    Mockito.verify(coordinatorComplete).run();
   }
 
 }
