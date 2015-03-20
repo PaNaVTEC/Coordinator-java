@@ -1,6 +1,6 @@
 package me.panavtec.coordinator.internal.model;
 
-public class MappedCoordinatorComplete {
+public abstract class MappedAction {
   private int coordinatorId;
   private String fieldName;
   private String parentName;
@@ -27,5 +27,13 @@ public class MappedCoordinatorComplete {
 
   public void setCoordinatorId(int coordinatorId) {
     this.coordinatorId = coordinatorId;
+  }
+
+  @Override public String toString() {
+    return "MappedAction{" +
+        "coordinatorId=" + coordinatorId +
+        ", fieldName='" + fieldName + '\'' +
+        ", parentName='" + parentName + '\'' +
+        '}';
   }
 }

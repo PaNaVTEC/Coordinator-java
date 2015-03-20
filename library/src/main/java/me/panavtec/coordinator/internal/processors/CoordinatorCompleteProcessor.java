@@ -3,44 +3,46 @@ package me.panavtec.coordinator.internal.processors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import me.panavtec.coordinator.internal.model.MappedCoordinatorComplete;
+import me.panavtec.coordinator.internal.model.MappedCompleteCoordinator;
+import me.panavtec.coordinator.internal.processors.tools.ElementTools;
 import me.panavtec.coordinator.qualifiers.CoordinatorComplete;
 
-public class CoordinatorCompleteProcessor {
+public class CoordinatorCompleteProcessor implements ActionProcessor<MappedCompleteCoordinator> {
 
-  private List<MappedCoordinatorComplete> completedActions = new ArrayList<>();
+  private List<MappedCompleteCoordinator> completedActions = new ArrayList<>();
+  private ElementTools elementTools = new ElementTools();
 
-  public List<MappedCoordinatorComplete> processCompleteActions(
-      Set<? extends Element> annotatedWithAction) {
-    completedActions.clear();
-    for (Element e : annotatedWithAction) {
-      processComplete(e);
+  @Override public List<MappedCompleteCoordinator> processActions(RoundEnvironment roundEnv) {
+    Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(CoordinatorComplete.class);
+    for (Element e : elements) {
+      process(e);
     }
     return completedActions;
   }
 
-  private void processComplete(Element e) {
-    if (isValidCoordinator(e)) {
-      CoordinatorComplete mappedAnnotation = annotationForElement(e);
-      MappedCoordinatorComplete complete = new MappedCoordinatorComplete();
-      complete.setCoordinatorId(mappedAnnotation.coordinatorId());
-      complete.setFieldName(e.getSimpleName().toString());
-      complete.setParentName(getElementParentCompleteClassName(e));
-      completedActions.add(complete);
+  @Override public void process(Element e) {
+    if (isValidAction(e)) {
+      completedActions.add(createMappedCompleteCoordinator(e));
     }
+  }
+
+  private MappedCompleteCoordinator createMappedCompleteCoordinator(Element e) {
+    CoordinatorComplete mappedAnnotation = annotationForElement(e);
+    MappedCompleteCoordinator complete = new MappedCompleteCoordinator();
+    complete.setCoordinatorId(mappedAnnotation.coordinatorId());
+    complete.setFieldName(elementTools.getFieldName(e));
+    complete.setParentName(elementTools.getElementParentCompleteClassName(e));
+    System.out.println(complete.toString());
+    return complete;
   }
 
   private CoordinatorComplete annotationForElement(Element e) {
     return e.getAnnotation(CoordinatorComplete.class);
   }
 
-  private String getElementParentCompleteClassName(Element e) {
-    return e.getEnclosingElement().toString();
-  }
-
-  private boolean isValidCoordinator(Element e) {
-    return e.getKind() == ElementKind.FIELD || e.getKind() == ElementKind.METHOD;
+  @Override public boolean isValidAction(Element e) {
+    return elementTools.isField(e) || elementTools.isMethod(e);
   }
 }

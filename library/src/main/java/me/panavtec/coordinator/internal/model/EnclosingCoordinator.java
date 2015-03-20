@@ -3,12 +3,11 @@ package me.panavtec.coordinator.internal.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoordinatorParent {
+public class EnclosingCoordinator {
 
   private String completeName;
   private String packageName;
   private String className;
-  private String completedAction;
   private List<MappedCoordinator> coordinators = new ArrayList<>();
 
   public String getCompleteName() {
@@ -21,15 +20,6 @@ public class CoordinatorParent {
 
   public List<MappedCoordinator> getCoordinators() {
     return coordinators;
-  }
-
-  public void setCoordinators(List<MappedCoordinator> coordinators) {
-    this.coordinators = coordinators;
-  }
-
-  @Override public boolean equals(Object obj) {
-    return obj instanceof CoordinatorParent && ((CoordinatorParent) obj).getCompleteName()
-        .equals(completeName);
   }
 
   public String getPackageName() {
@@ -48,11 +38,9 @@ public class CoordinatorParent {
     this.className = className;
   }
 
-  public String getCompletedAction() {
-    return completedAction;
+  @Override public boolean equals(Object obj) {
+    return obj instanceof EnclosingCoordinator && ((EnclosingCoordinator) obj).getCompleteName()
+        .equals(completeName);
   }
 
-  public void setCompletedAction(String completedAction) {
-    this.completedAction = completedAction;
-  }
 }

@@ -4,20 +4,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import me.panavtec.coordinator.Coordinator;
-import me.panavtec.coordinator.internal.model.CoordinatorParent;
+import me.panavtec.coordinator.internal.model.EnclosingCoordinator;
 import me.panavtec.coordinator.internal.model.MappedCoordinator;
+import me.panavtec.coordinator.internal.processors.tools.ElementTools;
 import me.panavtec.coordinator.qualifiers.Actions;
 
-public class CoordinatorProcessor {
+public class EnclosingCoordinatorProcessor {
 
-  private Map<String, CoordinatorParent> coordinators = new HashMap<>();
+  private Map<String, EnclosingCoordinator> coordinators = new HashMap<>();
+  private ElementTools elementTools = new ElementTools();
 
-  public Collection<CoordinatorParent> processCoordinators(
-      Set<? extends Element> annotatedWithAction) {
-    for (Element e : annotatedWithAction) {
+  public Collection<EnclosingCoordinator> processCoordinators(RoundEnvironment roundEnv) {
+    Set<? extends Element> actions = roundEnv.getElementsAnnotatedWith(Actions.class);
+    for (Element e : actions) {
       processCoordinator(e);
     }
     return coordinators.values();
@@ -25,46 +27,32 @@ public class CoordinatorProcessor {
 
   private void processCoordinator(Element e) {
     if (isValidCoordinator(e)) {
-      String parentClassName = getElementParentCompleteClassName(e);
+      String parentClassName = elementTools.getElementParentCompleteClassName(e);
       initializeParent(e);
       coordinators.get(parentClassName).getCoordinators().add(processActionsOfCoordinator(e));
     }
   }
 
-  private String getElementParentCompleteClassName(Element e) {
-    return e.getEnclosingElement().toString();
-  }
-
-  private String getElementPackagename(Element e) {
-    String parentClassName = getElementParentCompleteClassName(e);
-    return parentClassName.substring(0, parentClassName.lastIndexOf('.'));
-  }
-
   private void initializeParent(Element e) {
-    String parentClassName = getElementParentCompleteClassName(e);
+    String parentClassName = elementTools.getElementParentCompleteClassName(e);
     if (!coordinators.containsKey(parentClassName)) {
       coordinators.put(parentClassName, createParent(e));
     }
   }
 
-  private CoordinatorParent createParent(Element e) {
-    CoordinatorParent parent = new CoordinatorParent();
-    parent.setCompleteName(getElementParentCompleteClassName(e));
-    parent.setPackageName(getElementPackagename(e));
-    parent.setClassName(getElementParentClassName(e));
+  private EnclosingCoordinator createParent(Element e) {
+    EnclosingCoordinator parent = new EnclosingCoordinator();
+    parent.setCompleteName(elementTools.getElementParentCompleteClassName(e));
+    parent.setPackageName(elementTools.getElementPackagename(e));
+    parent.setClassName(elementTools.getElementParentClassName(e));
 
     System.out.println("className : " + parent.getCompleteName() + ", package: " + parent.getPackageName());
 
     return parent;
   }
 
-  private String getElementParentClassName(Element e) {
-    String parentClassName = getElementParentCompleteClassName(e);
-    return parentClassName.substring(parentClassName.lastIndexOf('.') + 1, parentClassName.length());
-  }
-
   private boolean isValidCoordinator(Element e) {
-    return isField(e) && isCoordinator(e);
+    return elementTools.isField(e) && isCoordinator(e);
   }
 
   private MappedCoordinator processActionsOfCoordinator(Element e) {
@@ -85,6 +73,7 @@ public class CoordinatorProcessor {
     mappedCoordinator.setActions(mappedAnnotation.value());
     mappedCoordinator.setCoordinatorId(mappedAnnotation.coordinatorId());
     mappedCoordinator.setCoordinatorField(fieldName);
+    System.out.println(mappedCoordinator.toString());
     return mappedCoordinator;
   }
 
@@ -93,10 +82,6 @@ public class CoordinatorProcessor {
   }
 
   private boolean isCoordinator(Element e) {
-    return e.asType().toString().equals(Coordinator.class.getCanonicalName());
-  }
-
-  private boolean isField(Element e) {
-    return e.getKind() == ElementKind.FIELD;
+    return elementTools.getElementType(e).equals(Coordinator.class.getCanonicalName());
   }
 }
