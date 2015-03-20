@@ -4,6 +4,7 @@ public abstract class MappedAction {
   private int coordinatorId;
   private String fieldName;
   private String parentName;
+  private boolean isMethod;
 
   public String getParentName() {
     return parentName;
@@ -27,6 +28,14 @@ public abstract class MappedAction {
 
   public void setCoordinatorId(int coordinatorId) {
     this.coordinatorId = coordinatorId;
+  }
+
+  public boolean isMethod() {
+    return isMethod;
+  }
+
+  public void setMethod(boolean isMethod) {
+    this.isMethod = isMethod;
   }
 
   @Override public String toString() {

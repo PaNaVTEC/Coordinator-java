@@ -35,7 +35,7 @@ public class ActionCompleteProcessor implements ActionProcessor<MappedCompleteAc
     action.setCoordinatorId(mappedAnnotation.coordinatorId());
     action.setFieldName(elementTools.getFieldName(e));
     action.setParentName(elementTools.getElementParentCompleteClassName(e));
-    System.out.println(action.toString());
+    action.setMethod(elementTools.isMethod(e));
     return action;
   }
 

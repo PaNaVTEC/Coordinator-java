@@ -34,7 +34,7 @@ public class CoordinatorCompleteProcessor implements ActionProcessor<MappedCompl
     complete.setCoordinatorId(mappedAnnotation.coordinatorId());
     complete.setFieldName(elementTools.getFieldName(e));
     complete.setParentName(elementTools.getElementParentCompleteClassName(e));
-    System.out.println(complete.toString());
+    complete.setMethod(elementTools.isMethod(e));
     return complete;
   }
 

@@ -15,10 +15,8 @@ public class CoordinatorInjectTest {
   private static final int ANOTHER_ACTION = 2;
 
   @Actions({ AN_ACTION, ANOTHER_ACTION }) Coordinator coordinator;
-  @Actions(coordinatorId = 2, value = {AN_ACTION}) Coordinator anotherCoordinator;
 
   @Mock @CoordinatorComplete Runnable coordinatorComplete;
-  @Mock @CoordinatorComplete(coordinatorId = 2) Runnable anotherCoordinatorComplete;
   @Mock @CoordinatedAction(action = AN_ACTION) Runnable completeAction;
 
   @Before public void setUp() {
@@ -39,11 +37,6 @@ public class CoordinatorInjectTest {
   @Test public void doWhenTest() {
     coordinator.completeAction(AN_ACTION);
     Mockito.verify(completeAction).run();
-  }
-
-  @Test public void doOtherCoordinatorTest() {
-    anotherCoordinator.completeAction(AN_ACTION);
-    Mockito.verify(anotherCoordinatorComplete).run();
   }
 
   private void verifyComplete() {
