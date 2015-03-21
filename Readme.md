@@ -1,5 +1,5 @@
 #Coordinator 
- ![Maven Central](https://img.shields.io/maven-central/v/me.panavtec/coordinator.svg)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Coordinator-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1656) ![Maven Central](https://img.shields.io/maven-central/v/me.panavtec/coordinator.svg)
  
 Coordinator is a Java library that is used to coordinate various asynchronous actions. Usually we found cases that you need to check if other thread is completed to execute an action, coordinator solves this problem without using flags.
 
