@@ -8,7 +8,7 @@ import javax.lang.model.element.Element;
 import me.panavtec.coordinator.compiler.model.MappedAction;
 import me.panavtec.coordinator.compiler.processors.tools.ElementTools;
 
-public abstract class AbstractProcessor<T extends MappedAction> {
+abstract class AbstractProcessor<T extends MappedAction> {
 
   protected ElementTools elementTools = new ElementTools();
 

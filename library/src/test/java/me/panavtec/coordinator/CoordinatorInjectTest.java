@@ -1,8 +1,8 @@
 package me.panavtec.coordinator;
 
-import me.panavtec.coordinator.compiler.qualifiers.Actions;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatedAction;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatorComplete;
+import me.panavtec.coordinator.qualifiers.Actions;
+import me.panavtec.coordinator.qualifiers.CoordinatedAction;
+import me.panavtec.coordinator.qualifiers.CoordinatorComplete;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

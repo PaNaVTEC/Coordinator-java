@@ -9,7 +9,7 @@ import javax.lang.model.element.Element;
 import me.panavtec.coordinator.compiler.model.EnclosingCoordinator;
 import me.panavtec.coordinator.compiler.model.MappedCoordinator;
 import me.panavtec.coordinator.compiler.processors.tools.ElementTools;
-import me.panavtec.coordinator.compiler.qualifiers.Actions;
+import me.panavtec.coordinator.qualifiers.Actions;
 
 public class EnclosingCoordinatorProcessor {
 

@@ -1,4 +1,4 @@
-package me.panavtec.coordinator.compiler.qualifiers;
+package me.panavtec.coordinator.qualifiers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface CoordinatedAction {
+public @interface CoordinatorComplete {
   int coordinatorId() default 1;
-  int action();
 }

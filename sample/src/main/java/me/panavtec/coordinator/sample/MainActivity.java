@@ -7,9 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import me.panavtec.coordinator.Coordinator;
-import me.panavtec.coordinator.compiler.qualifiers.Actions;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatedAction;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatorComplete;
+import me.panavtec.coordinator.qualifiers.Actions;
+import me.panavtec.coordinator.qualifiers.CoordinatedAction;
+import me.panavtec.coordinator.qualifiers.CoordinatorComplete;
 
 public class MainActivity extends ActionBarActivity {
 
