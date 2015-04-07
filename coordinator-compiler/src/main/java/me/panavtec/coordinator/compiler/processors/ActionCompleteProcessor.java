@@ -4,7 +4,7 @@ import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import me.panavtec.coordinator.compiler.model.MappedCoordinatedAction;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatedAction;
+import me.panavtec.coordinator.qualifiers.CoordinatedAction;
 
 public class ActionCompleteProcessor extends AbstractProcessor<MappedCoordinatedAction> {
 

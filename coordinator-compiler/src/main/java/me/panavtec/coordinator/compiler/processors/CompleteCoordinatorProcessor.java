@@ -4,7 +4,7 @@ import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import me.panavtec.coordinator.compiler.model.MappedCompleteCoordinator;
-import me.panavtec.coordinator.compiler.qualifiers.CoordinatorComplete;
+import me.panavtec.coordinator.qualifiers.CoordinatorComplete;
 
 public class CompleteCoordinatorProcessor
     extends AbstractProcessor<MappedCompleteCoordinator> {
