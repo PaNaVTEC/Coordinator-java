@@ -1,3 +1,2 @@
-include ':library', ':sample', ':coordinator-common'
-include 'coordinator-compiler'
+include ':library', ':sample', ':coordinator-common', ":coordinator-compiler"
 
