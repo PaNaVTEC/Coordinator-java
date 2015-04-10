@@ -1,7 +1,5 @@
 package me.panavtec.coordinator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,20 +14,7 @@ public class Coordinator {
   private final Runnable coordinatorComplete;
 
   public static <T> Coordinator inject(T source) {
-    try {
-      Class<?> injector = Class.forName(source.getClass().getName() + "$$CoordinatorInjector");
-      Method inject = injector.getMethod("coordinateInject", source.getClass());
-      return (Coordinator) inject.invoke(null, source);
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return new CoordinatorInjector<T>().inject(source);
   }
 
   public Coordinator(int coordinatorId, Runnable coordinatorComplete, Integer... actions) {
@@ -83,5 +68,4 @@ public class Coordinator {
       coordinatorComplete.run();
     }
   }
-
 }
